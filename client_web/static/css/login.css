@@ -1,0 +1,275 @@
+/* static/css/login.css */
+
+/* Estilo base para o HTML e corpo da página */
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    /* === ADICIONADO: position: relative para posicionamento absoluto dos pseudo-elementos === */
+    position: relative;
+    overflow: hidden; /* Oculta partes das formas desfocadas que saem da tela */
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #eef2f7; /* Cor de fundo base do corpo */
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container principal do formulário de login (a box branca) */
+.login-container {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 540px;
+    width: 90%;
+    min-width: 280px;
+    height: auto;
+
+    margin-top: auto;
+    margin-bottom: auto;
+
+    box-sizing: border-box;
+    /* === ADICIONADO: Garante que o container fique acima dos pseudo-elementos de fundo === */
+    position: relative;
+    z-index: 1;
+}
+
+/* === ADICIONADO: Efeito de Fundo com Formas Desfocadas (usando pseudo-elementos no body) === */
+
+/* Pseudo-elemento ::before - Primeira forma desfocada (azul corporativo) */
+body::before {
+    content: ''; /* Obrigatório para pseudo-elementos */
+    position: absolute; /* Permite posicionar com top/left/bottom/right */
+    top: -100px; /* Posição inicial (ajuste conforme deseja que apareça) */
+    left: -100px;
+    width: 350px; /* Tamanho da forma (ajuste) */
+    height: 350px;
+    background: #3498db; /* Cor (o azul dos botões primários) */
+    border-radius: 50%; /* Faz a forma ser circular */
+    filter: blur(120px); /* Aplica o desfoque intenso (ajuste o valor para mais/menos desfoque) */
+    z-index: 0; /* Garante que fique atrás do conteúdo principal (z-index do container é 1) */
+    opacity: 0.7; /* Transparência (ajuste de 0 a 1) */
+}
+
+/* Pseudo-elemento ::after - Segunda forma desfocada (azul mais claro/diferente) */
+body::after {
+    content: ''; /* Obrigatório */
+    position: absolute;
+    bottom: -100px; /* Posição inicial (ajuste) */
+    right: -100px;
+    width: 400px; /* Tamanho da forma (ajuste) */
+    height: 400px;
+    background: #5dade2; /* Outra cor de azul (exemplo de um tom diferente) */
+    border-radius: 50%; /* Forma circular */
+    filter: blur(150px); /* Desfoque (pode ser diferente do anterior) */
+    z-index: 0; /* Atrás do conteúdo principal */
+    opacity: 0.6; /* Transparência */
+}
+
+/* --- FIM DO EFEITO DE FUNDO --- */
+
+
+/* Estilo para o título (Login) */
+h2 {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Estilo para mensagens de erro do formulário */
+.form-error-message {
+    color: #dc3545;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: left;
+    border: 1px solid #f5c6cb;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Container para cada campo do formulário (Label + Input) */
+.form-field {
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.form-field-centered {
+    text-align: center;
+}
+
+/* Estilo para os rótulos dos campos (Label) */
+.form-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #555;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+/* Estilo para os campos de input de texto e senha */
+.form-field input[type="text"],
+.form-field input[type="password"] {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+}
+
+/* Estilo para o input do checkbox "Lembre-me" */
+.form-field input[type="checkbox"] {
+    margin-right: 8px;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Estilo para o rótulo do checkbox "Lembre-me" */
+.form-field label[for^="id_"] {
+     display: inline-block;
+     font-weight: normal;
+     font-size: 14px;
+     color: #333;
+     vertical-align: middle;
+     margin-bottom: 0;
+     cursor: pointer;
+     font-family: inherit;
+}
+
+/* Estilo Base para Botões e Links com Aparência de Botão */
+.btn {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+    min-height: 28px;
+    width: auto;
+    border: none;
+    font-family: inherit;
+    line-height: normal;
+    margin: 0;
+}
+
+/* Estilo do Botão Primário (Azul) */
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Estilo do Botão Secundário (Cinza) */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Container para agrupar botões/links e colocá-los lado a lado */
+.button-group {
+    display: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 15px;
+    width: 100%;
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+}
+
+/* Garante que os botões/links dentro do grupo compartilhem o espaço */
+.button-group button[type="submit"],
+.button-group .btn {
+    flex-grow: 1;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Reset padrão de botão de submissão */
+button[type="submit"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Estilo para o parágrafo "Esqueci minha senha?" */
+.forgot-password-link {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+/* Estilo para o LINK (<a>) dentro do parágrafo */
+.forgot-password-link a {
+    font-size: 12px;
+    text-decoration: none;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.forgot-password-link a:hover {
+    color: #333;
+}
+
+/* --- ESTILOS PARA O RODAPÉ E BOTÃO LINKEDIN --- */
+
+/* Estilo para a área do rodapé */
+.login-footer {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #777;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+/* Ajusta a margem dos parágrafos dentro do rodapé */
+.login-footer p {
+    margin: 5px 0;
+}
+
+/* Estilo para o link/botão do LinkedIn */
+.linkedin-button {
+    display: inline-block;
+    margin-top: 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.3s ease;
+}
+
+/* Efeito visual no hover */
+.linkedin-button:hover {
+    opacity: 0.8;
+}
+
+/* Estilo para a imagem da logo do LinkedIn */
+.linkedin-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    border: none;
+}

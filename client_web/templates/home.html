@@ -1,0 +1,142 @@
+{# client_web/templates/home.html #}
+{% load static %} {# Garante que podemos usar a tag 'static' #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Client App</title> {# Título da página Dashboard #}
+    {# Ligamos o mesmo CSS da tela de login para manter o tema visual (fontes, cores, botões, fundo) #}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    {# Link para carregar a fonte Montserrat #}
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    {# === Estilos para o Menu Suspenso (Dropdown) === #}
+    <style>
+        /* Container para o dropdown (botão + conteúdo do menu) */
+        .dropdown {
+            position: relative; /* Essencial para posicionar o conteúdo do dropdown RELATIVO a este contêiner */
+            display: inline-block; /* Permite que o dropdown se posicione corretamente se estiver dentro de um elemento centralizado por text-align */
+        }
+
+        /* Conteúdo do Dropdown (O menu que aparece) */
+        .dropdown-content {
+            display: none; /* Esconde o conteúdo do dropdown por padrão */
+            position: absolute; /* Posiciona o conteúdo do dropdown ABSOLUTO em relação ao seu contêiner pai (.dropdown) */
+            background-color: #f9f9f9; /* Fundo claro para o menu */
+            min-width: 160px; /* Largura mínima do menu */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Sombra para dar profundidade */
+            z-index: 1; /* Garante que o menu apareça ACIMA de outros elementos */
+            top: 100%; /* Posiciona o topo do menu logo abaixo do topo do contêiner .dropdown (que começa no botão) */
+            left: 0; /* Alinha a borda esquerda do menu com a borda esquerda do contêiner .dropdown */
+            border-radius: 4px; /* Cantos levemente arredondados */
+            overflow: hidden; /* Esconde qualquer coisa que vaze dos cantos arredondados */
+        }
+
+        /* Links dentro do conteúdo do dropdown */
+        .dropdown-content a {
+            color: #333; /* Cor do texto dos links */
+            padding: 12px 16px; /* Espaçamento interno dos links */
+            text-decoration: none; /* Remove sublinhado */
+            display: block; /* Faz cada link ocupar a largura total do menu */
+            text-align: left; /* Alinha o texto do link à esquerda */
+        }
+
+        /* Mudar a cor de fundo dos links do dropdown ao passar o mouse */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1; /* Fundo cinza claro ao passar o mouse */
+        }
+
+        /* Classe para mostrar o dropdown content (será toggled by JavaScript) */
+        .dropdown-content.show {
+            display: block; /* Quando esta classe está presente, o menu é mostrado */
+        }
+    </style>
+    {# FIM DOS ESTILOS PARA MENU SUSPENSO #}
+
+</head>
+<body>
+    {# O Flexbox no body e o fundo desfocado vêm do login.css #}
+
+    {# Um container principal para a Dashboard, usando a classe CSS main-content-box #}
+    <div class="main-content-box">
+
+        {# Seção da Logo no topo da Dashboard #}
+        <img src="{% static 'images/logo_principal.png' %}" alt="Logo da Aplicação" style="max-width: 100px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
+
+        {# Mensagem de Boas-vindas e Status do Usuário #}
+        {% if user.is_authenticated %}
+            <h2>Bem-vindo, {{ user.username }}!</h2> {# Exibe o nome de usuário logado #}
+            <p>Esta é a sua Dashboard. Aqui você encontrará as funcionalidades do sistema.</p>
+        {% else %}
+            <h2>Bem-vindo!</h2>
+            <p>Por favor, faça login para acessar o sistema.</p>
+            <p><a href="{% url 'login' %}">Ir para Login</a></p>
+        {% endif %}
+
+        {# Área de Conteúdo e Navegação da Dashboard #}
+        <div class="dashboard-content" style="margin-top: 30px; text-align: left;">
+            <p>Nesta área será construído o conteúdo da sua Dashboard, incluindo menus de navegação e links para funcionalidades.</p>
+
+            {# Estrutura para o Menu Suspenso "Service Desk" #}
+            <div class="dropdown" style="margin-top: 20px; text-align: center;"> {# Opcional: Centraliza o dropdown #}
+                 {# O botão que, quando clicado (com JavaScript), vai mostrar/esconder o menu #}
+                 <button class="btn btn-primary" id="serviceDeskButton">Service Desk</button>
+
+                 {# Conteúdo do Menu Suspenso (inicialmente escondido) #}
+                 <div class="dropdown-content" id="serviceDeskDropdown">
+                     {# Link para Abrir Chamado #}
+                     <a href="{% url 'create_ticket' %}">Abrir Chamado</a>
+                     {# Link para Listar Chamados #}
+                     <a href="{% url 'list_tickets' %}">Listar Chamado</a>
+                     {# Adicione outros links de Helpdesk aqui conforme necessário #}
+                 </div>
+            </div>
+            {# FIM DA ESTRUTURA DO MENU SUSPENSO #}
+
+            {# === ADICIONADO: Código JavaScript para o Menu Suspenso === #}
+            <script>
+                // Função para alternar a visibilidade do menu suspenso
+                function toggleDropdown() {
+                    document.getElementById("serviceDeskDropdown").classList.toggle("show");
+                }
+
+                // Conectar a função toggleDropdown ao evento de clique no botão
+                document.getElementById("serviceDeskButton").onclick = function(event) {
+                     toggleDropdown();
+                     event.stopPropagation(); // Impede que o evento de clique se propague para a janela e feche o dropdown imediatamente
+                }
+
+                // Fechar o dropdown se o usuário clicar fora dele
+                window.onclick = function(event) {
+                  if (!event.target.matches('#serviceDeskButton')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    for (var i = 0; i < dropdowns.length; i++) {
+                      var openDropdown = dropdowns[i];
+                      if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                      }
+                    }
+                  }
+                }
+            </script>
+            {# FIM DO CÓDIGO JAVASCRIPT #}
+
+        </div> {# Fim do dashboard-content #}
+
+        {# Link para Sair da Aplicação (Logout) #}
+        <div style="margin-top: 30px; text-align: center;">
+             <a href="{% url 'logout' %}" class="btn btn-secondary">Sair</a> {# Texto do botão #}
+        </div>
+
+        {# Seção de Rodapé - Reutiliza estrutura e classes #}
+        <div class="login-footer" style="margin-top: 40px;">
+            <p>&copy; {% now "Y" %} Inovacti. Todos os direitos reservados.</p>
+            <p style="margin-bottom: 10px;">Problemas ou dúvidas? Entre em contato com o administrador ou:</p>
+            <a href="https://www.linkedin.com/company/inovacti/" target="_blank" class="linkedin-button">
+                <img src="{% static 'images/linkedin_icon.png' %}" alt="LinkedIn" class="linkedin-icon">
+            </a>
+        </div>
+
+    </div> {# Fim do main-content-box #}
+
+</body>
+</html>

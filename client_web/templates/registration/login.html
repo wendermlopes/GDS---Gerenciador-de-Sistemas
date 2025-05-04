@@ -1,0 +1,109 @@
+{# client_web/templates/registration/login.html #}
+{% load static %} {# Garante que podemos usar a tag 'static' para arquivos estáticos como CSS e imagens #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Client App</title> {# Título da página #}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}"> {# Liga o arquivo CSS principal #}
+    {# Link para carregar a fonte Montserrat do Google Fonts #}
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    {# Container principal que centraliza o conteúdo e aplica o fundo branco/sombra #}
+    <div class="login-container">
+
+        {# Seção da Logo #}
+        {# Imagem da logo da sua empresa. Caminho: static/images/logo_principal.png #}
+        {# Estilos inline para centralizar a imagem se ela for menor que o container #}
+        <img src="{% static 'images/logo_principal.png' %}" alt="Logo da Aplicação" style="max-width: 150px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
+
+        {# Título da tela #}
+        <h2>Login</h2>
+
+        {# Exibe mensagens de erro do formulário (ex: credenciais inválidas) #}
+        {% if form.errors %}
+            <p class="form-error-message">Seu nome de usuário ou senha estão incorretos. Por favor, tente novamente.</p>
+        {% endif %}
+
+        {# Formulário de Login #}
+        <form method="post"> {# Método POST para enviar dados de login de forma segura #}
+            {% csrf_token %} {# Tag de segurança essencial para formulários POST no Django #}
+
+            {# Campo de Nome de Usuário #}
+            {# Usa a classe 'form-field' para espaçamento e alinhamento #}
+            <div class="form-field">
+                {{ form.username.label_tag }} {# Renderiza o label do campo (Nome de Usuário) #}
+                {{ form.username }} {# Renderiza o campo de input de texto para o nome de usuário #}
+            </div>
+
+            {# Campo de Senha #}
+            {# Usa a classe 'form-field' para espaçamento e alinhamento #}
+            <div class="form-field">
+                {{ form.password.label_tag }} {# Renderiza o label do campo (Senha) #}
+                {{ form.password }} {# Renderiza o campo de input de senha #}
+            </div>
+
+            {# === Campo "Lembre-me" === #}
+            {# Renderiza este div e conteúdo APENAS se o campo 'remember_me' existir no formulário #}
+            {% if form.remember_me %}
+            {# Usa a classe 'form-field' para espaçamento e 'form-field-centered' para centralizar #}
+            <div class="form-field form-field-centered">
+                {{ form.remember_me }} {# Renderiza a caixa de seleção (checkbox) #}
+                {{ form.remember_me.label_tag }} {# Renderiza o rótulo "Lembre-me" #}
+            </div>
+            {% endif %}
+            {# === Fim do campo "Lembre-me" === #}
+
+
+            {# Container para os botões "Entrar" e "Login Administrativo" lado a lado #}
+            {# Usa a classe 'button-group' para layout flexível lado a lado #}
+            {# ESTÁ DENTRO DA TAG <form> para manter o agrupamento visual #}
+            <div class="button-group">
+                {# Botão de Submissão do formulário (Login) #}
+                {# Usa classes 'btn' (base de botão) e 'btn-primary' (estilo azul) #}
+                <button type="submit" class="btn btn-primary">Entrar</button> {# Texto do botão #}
+
+                {# Link para a página de Login Administrativo #}
+                {# Usa classes 'btn' (base de botão) e 'btn-secondary' (estilo cinza) #}
+                {# A tag 'url' gera a URL para o login do admin (nomeada 'admin:login') #}
+                <a href="{% url 'admin:login' %}" class="btn btn-secondary">Login Administrativo</a> {# Texto do link #}
+            </div>
+        </form> {# Fim do Formulário #}
+
+        {# === Link "Esqueci minha senha?" === #}
+        {# Usa a classe 'forgot-password-link' para estilizar o parágrafo (tamanho fonte base, alinhamento) #}
+        <p class="forgot-password-link">
+             {# O link em si ('<a>') será estilizado pela regra CSS '.forgot-password-link a' #}
+             {# A tag 'url' gera a URL para o passo 1 de reset de senha (nomeada 'password_reset') #}
+             <a href="{% url 'password_reset' %}">Esqueci minha senha?</a> {# Texto do link #}
+        </p>
+        {# === Fim do link "Esqueci minha senha?" === #}
+
+
+        {# === Seção de Rodapé com Copyright e Contato (Incluindo LinkedIn) === #}
+        {# Usa a classe 'login-footer' para estilização geral do rodapé #}
+        <div class="login-footer">
+            {# Parágrafo de Copyright com o ano atual gerado dinamicamente pelo Django #}
+            <p>&copy; {% now "Y" %} CooperTIC. Todos os direitos reservados.</p> {# Texto do copyright #}
+            {# Parágrafo com mensagem de suporte #}
+            <p style="margin-bottom: 10px;">Problemas para logar? Entre em contato com o administrador ou:</p>
+
+            {# Link para a página da empresa no LinkedIn #}
+            {# A classe 'linkedin-button' estiliza o link como um container para o ícone #}
+            {# 'target="_blank"' faz o link abrir em uma nova aba #}
+            <a href="https://www.linkedin.com/company/inovacti/" target="_blank" class="linkedin-button">
+                {# Imagem da logo do LinkedIn. Caminho: static/images/linkedin_icon.png #}
+                {# A classe 'linkedin-icon' estiliza a imagem do ícone (tamanho) #}
+                <img src="{% static 'images/linkedin_icon.png' %}" alt="LinkedIn" class="linkedin-icon"> {# Imagem do ícone #}
+                {# Opcional: adicionar texto ao lado do ícone, se quiser #}
+                {# <span>Fale conosco no LinkedIn</span> #}
+            </a>
+            {# Você pode adicionar links para outras redes sociais ou formas de contato aqui se necessário #}
+
+        </div>
+        {# === FIM DA SEÇÃO DE RODAPÉ === #}
+
+
+    </div> {# Fim do container principal 'login-container' #}
+</body>
+</html>

@@ -1,0 +1,148 @@
+{# helpdesk/templates/helpdesk/create_ticket.html #}
+{% load static %} {# Carrega as tags para lidar com arquivos estáticos #}
+{% load i18n %} {# Pode ser útil para internacionalização no futuro #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Abrir Chamado - Helpdesk</title> {# Título da página #}
+    {# Ligamos o mesmo CSS da tela de login para manter o tema visual consistente #}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    {# Link para carregar a fonte Montserrat #}
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    {# Pode adicionar um CSS específico para Helpdesk aqui depois se precisar #}
+    {# <link rel="stylesheet" href="{% static 'css/helpdesk.css' %}"> #}
+</head>
+<body>
+    {# O Flexbox no body e o fundo desfocado vêm do login.css #}
+
+    {# Container principal para o conteúdo da página #}
+    {# === COMENTÁRIO: Para achatar/esticar VERTICALMENTE a box branca, ajuste o PRIMEIRO valor de 'margin' e o PRIMEIRO valor de 'padding' aqui: === #}
+    <div class="main-content-box" style="max-width: 800px; width: 100%; height: auto; margin: 8px auto; padding: 1px 15px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); text-align: center;">
+
+        {# Logo #}
+        {# === COMENTÁRIO: Para ajustar o espaço ABAIXO do Logo, altere o valor de 'margin-bottom' aqui: === #}
+        <img src="{% static 'images/logo_principal.png' %}" alt="Logo da Aplicação" style="max-width: 100px; margin-bottom: 6px; display: block; margin-left: auto; margin-right: auto;">
+
+        {# Título da Seção #}
+        {# === COMENTÁRIO: Para ajustar o espaço ABAIXO do Título, altere o valor de 'margin-bottom' aqui: === #}
+        <h2 style="margin-bottom: 4px;">Abrir Novo Chamado</h2>
+
+        {# Exibição de Mensagens do Django #}
+        {% if messages %}
+            {# === COMENTÁRIO: Para ajustar o espaço ACIMA e ABAIXO das mensagens, altere os valores de 'margin' e 'padding' aqui: === #}
+            <ul class="messages" style="list-style: none; padding: 4px 0; margin: 4px 0;">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="padding: 3px 5px; margin-bottom: 3px; border-radius: 4px; font-size: 13px; text-align: left;{% if message.tags == 'success' %} background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;{% elif message.tags == 'error' %} background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;{% elif message.tags == 'warning' %} background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;{% elif message.tags == 'info' %} background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;{% endif %}">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {# Fim da Exibição de Mensagens #}
+
+
+        {# Formulário para Abrir Chamado #}
+        {# === COMENTÁRIO: Para ajustar o espaço ACIMA do formulário, altere o valor de 'margin-top' aqui: === #}
+        <form method="post" style="text-align: left; margin-top: 6px;">
+            {% csrf_token %} {# Token de segurança essencial #}
+
+            {# === GRID DE CAMPOS DO FORMULÁRIO === #}
+            {# === COMENTÁRIO: Para ajustar o espaçamento VERTICAL entre os campos do formulário, altere o PRIMEIRO valor de 'gap' aqui: === #}
+            {# === COMENTÁRIO: Para ajustar o espaçamento HORIZONTAL entre rótulo e campo, altere o SEGUNDO valor de 'gap' aqui: === #}
+            {# === COMENTÁRIO: Para ajustar a LARGURA da coluna dos rótulos (e, consequentemente, a largura dos campos que NÃO têm largura fixa inline), altere o valor FIXO (ex: 100px) em 'grid-template-columns' aqui: === #}
+            <div class="form-grid" style="display: grid; grid-template-columns: 100px 1fr; gap: 3px 20px; align-items: center; margin-bottom: 3px; text-align: left;">
+
+                {# Campo Assunto - Linha 1 #}
+                <div class="form-field-label">
+                    {{ form.subject.label_tag }}<span class="required-star">*</span>
+                </div>
+                <div class="form-field-input">
+                    {# === Renderização manual do campo input para adicionar estilo inline para a largura === #}
+                    {# === COMENTÁRIO: Para ajustar a LARGURA ('width') do campo Assunto, altere o valor no atributo 'style' abaixo: === #}
+                    <input type="text" name="{{ form.subject.name }}" id="{{ form.subject.id }}" {% if form.subject.field.required %}required{% endif %} style="width: 555px;" value="{{ form.subject.value|default:"" }}">
+                    {{ form.subject.errors }} {# Renderiza os erros separadamente #}
+                </div>
+
+                {# Campo Categoria - Linha 2 #}
+                <div class="form-field-label">
+                    {{ form.category.label_tag }}<span class="required-star">*</span>
+                </div>
+                <div class="form-field-input">
+                    {{ form.category }}
+                    {{ form.category.errors }}
+                </div>
+
+                {# Campo Prioridade - Linha 3 #}
+                <div class="form-field-label">
+                    {{ form.priority.label_tag }}
+                </div>
+                <div class="form-field-input">
+                    {{ form.priority }}
+                    {{ form.priority.errors }}
+                </div>
+
+                {# Campo Descrição - Linha 4 (ocupando mais altura) #}
+                {# === COMENTÁRIO: Para ajustar o espaço do rótulo da Descrição no topo, altere o valor de 'padding-top' aqui: === #}
+                <div class="form-field-label" style="align-self: start; padding-top: 3px;">
+                    {{ form.description.label_tag }}<span class="required-star">*</span>
+                </div>
+                <div class="form-field-input full-width-input">
+                    {# Renderização manual do campo textarea para adicionar estilos inline #}
+                    {# === COMENTÁRIO: Para ajustar a LARGURA ('width') e a ALTURA ('height') do campo Descrição, altere os valores no atributo 'style' abaixo: === #}
+                    <textarea name="{{ form.description.name }}" id="{{ form.description.id }}" {% if form.description.field.required %}required{% endif %} style="height: 94px; width: 555px;">{{ form.description.value|default:"" }}</textarea>
+                    {{ form.description.errors }} {# Renderiza os erros separadamente #}
+                </div>
+
+                {# === Placeholder para o Campo Anexo - Próxima linha === #}
+                <div class="form-field-label">
+                    <label>Anexo:</label>
+                </div>
+                <div class="form-field-input full-width-input">
+                     {# === COMENTÁRIO: Para ajustar o espaço VERTICAL dentro da seção Anexo, ajuste o 'gap' aqui: === #}
+                     <div class="anexo-section" style="gap: 3px; align-items: center;">
+                         <button type="button" class="btn btn-secondary btn-small">Selecionar Arquivo</button>
+                         <span class="anexo-path-label">Nenhum arquivo selecionado</span>
+                     </div>
+                </div>
+                 {# === Fim Placeholder Anexo === #}
+
+            </div> {# === Fim do form-grid === #}
+
+
+            {# === Nota de Campos Obrigatórios - Após o Grid de Formulário === #}
+            {# === COMENTÁRIO: Para ajustar o espaço ACIMA da nota de obrigatórios, altere o valor de 'margin-top' aqui: === #}
+            <p class="required-note" style="font-size: 0.9em; color: #777; margin-top: 3px; text-align: left;">
+                * Campos obrigatórios
+            </p>
+
+
+            {# === Layout horizontal para os botões de ação === #}
+            <div class="button-group-centered">
+                 {# === COMENTÁRIO: Para ajustar o espaço VERTICAL entre os botões, altere o 'gap' aqui: === #}
+                <div class="button-group" style="gap: 8px;">
+                    <button type="submit" class="btn btn-primary">Enviar Chamado</button>
+                     <a href="{% url 'home' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+            {# === Fim Botões de Ação === #}
+
+        </form> {# Fim do Formulário #}
+
+
+        {# Seção de Rodapé #}
+        {# === COMENTÁRIO: Para ajustar o espaço ACIMA do rodapé, altere o valor de 'margin-top' aqui: === #}
+        {# === COMENTÁRIO: Para ajustar o espaço ENTRE o conteúdo do rodapé e a borda superior (o "colado na bordinha"), altere o valor de 'padding-top' aqui: === #}
+        <div class="login-footer" style="margin-top: 15px; padding-top: 20px;"> {# === MODIFICADO: Padding superior adicionado para mais espaço acima do conteúdo do rodapé === #}
+            <p>&copy; {% now "Y" %} Inovacti. Todos os direitos reservados.</p>
+             {# === COMENTÁRIO: Para ajustar o espaço ABAIXO deste parágrafo, altere o valor de 'margin-bottom' aqui: === #}
+            <p style="margin-bottom: 3px;">Problemas ou dúvidas? Entre em contato com o administrador ou:</p>
+            {# === COMENTÁRIO: Para ajustar o espaço ACIMA do link do LinkedIn, altere o valor de 'margin-top' aqui: === #}
+            <a href="https://www.linkedin.com/company/inovacti/" target="_blank" class="linkedin-button" style="margin-top: 15px;"> {# === MODIFICADO: Margem superior adicionada ao link do LinkedIn === #}
+                <img src="{% static 'images/linkedin_icon.png' %}" alt="LinkedIn" class="linkedin-icon">
+            </a>
+        </div>
+
+    </div> {# Fim do main-content-box #}
+
+</body>
+</html>
